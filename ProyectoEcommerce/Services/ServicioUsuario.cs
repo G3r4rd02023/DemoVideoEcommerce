@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ProyectoEcommerce.Migrations;
 using ProyectoEcommerce.Models;
 using ProyectoEcommerce.Models.Entidades;
 
@@ -10,14 +11,15 @@ namespace ProyectoEcommerce.Services
         private readonly EcommerceContext _context;
         private readonly UserManager<Usuario> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<Usuario> _signInManager;
 
-        public ServicioUsuario(EcommerceContext context, 
-            UserManager<Usuario> userManager, 
-            RoleManager<IdentityRole> roleManager)
+        public ServicioUsuario(EcommerceContext context, UserManager<Usuario> userManager, 
+            RoleManager<IdentityRole> roleManager, SignInManager<Usuario> signInManager)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task AsignarRol(Usuario usuario, string nombreRol)
@@ -25,10 +27,26 @@ namespace ProyectoEcommerce.Services
             await _userManager.AddToRoleAsync(usuario, nombreRol);
         }
 
+        public async Task CerrarSesion()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
         public async Task<IdentityResult> CrearUsuario(Usuario usuario, string password)
         {
             return await _userManager.CreateAsync(usuario, password);
         }
+
+        public async Task<SignInResult> IniciarSesion(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(
+            model.Username,
+            model.Password,
+            model.RememberMe,
+            false);
+        }
+
+
 
         public async Task<Usuario> ObtenerUsuario(string email)
         {

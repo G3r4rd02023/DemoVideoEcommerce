@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ProyectoEcommerce.Models;
 using ProyectoEcommerce.Models.Entidades;
 
 namespace ProyectoEcommerce.Services
@@ -10,6 +11,8 @@ namespace ProyectoEcommerce.Services
         Task VerificarRol(string nombreRol);
         Task AsignarRol(Usuario usuario, string nombreRol);
         Task<bool> UsuarioEnRol(Usuario usuario, string nombreRol);
+        Task<SignInResult> IniciarSesion(LoginViewModel model);
+        Task CerrarSesion();
     }
 
 }
