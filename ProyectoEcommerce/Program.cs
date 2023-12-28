@@ -31,7 +31,11 @@ namespace ProyectoEcommerce
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<EcommerceContext>();
-
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Login/NoAutorizado";
+                options.AccessDeniedPath = "/Login/NoAutorizado";
+            });
 
             var app = builder.Build();
 
@@ -61,6 +65,7 @@ namespace ProyectoEcommerce
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             app.MapControllerRoute(
                 name: "default",

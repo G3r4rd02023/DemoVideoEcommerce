@@ -44,5 +44,13 @@ namespace ProyectoEcommerce.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult NoAutorizado()
+        {
+            return View();
+        }
+
+
+
+
     }
 }
