@@ -27,9 +27,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Login" asp-action="IniciarSesion">IniciarSesion</a>
-                            </li>
+                           
                             <li class="nav-item">
                                 <a class="nav-link" href="#"></a>
                             </li>
@@ -46,17 +44,35 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Catalogo" asp-action="Index"><i class=" fa fa-gift fa-beat text-danger"></i><strong> Catalogo</strong></a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Ventas" asp-action="Index"><i class="fa fa-bell fa-beat text-danger"></i><strong> Ventas</strong></a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Productos" asp-action="Lista"><i class="fa fa-gifts fa-beat text-danger"></i><strong> Productos</strong></a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Login" asp-action="ListaUsuarios"><i class="fa fa-users fa-beat text-danger"></i><strong> Usuarios</strong></a></li>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="CerrarSesion">Cerrar Sesion</a>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Usuarios" asp-action="Lista"><i class="fa fa-users fa-beat text-danger"></i><strong> Usuarios</strong></a></li>
+                                        
                                     </ul>
                                 </li>
                             }
                             @if (User.Identity.IsAuthenticated && User.IsInRole("Cliente"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="MisCompras">Mis Compras</a>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CerrarSesion">Cerrar Sesion</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Ventas" asp-action="MisCompras">Mis Compras</a>                                    
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Catalogo" asp-action="Index">Catalogo</a>
+                                </li>
+                            }
+
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login"
+                                       asp-action="EditarUsuario"><strong>Hola! @User.Identity.Name</strong></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="CerrarSesion">Cerrar Sesión</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="IniciarSesion">Iniciar Sesión</a>
                                 </li>
                             }
 

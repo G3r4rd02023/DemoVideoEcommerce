@@ -1,0 +1,61 @@
+﻿@model ProyectoEcommerce.Models.UsuarioViewModel
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<div class=" row">
+    <div class=" card">
+        <div class=" card-header">
+            <h4>Registrar Usuario</h4>
+        </div>
+        <div class=" card-body">
+            <form asp-action="Registro" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class=" text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="TipoUsuario" />
+
+                <div class=" form-group">
+                    <label></label>
+                    <input asp-for="Username" class="form-control" placeholder="Correo" autocomplete="off" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class=" form-group">
+                    <label></label>
+                    <input asp-for="Password" class="form-control" placeholder="Contraseña" autocomplete="off" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class=" form-group">
+                    <label></label>
+                    <input asp-for="PasswordConfirm" class="form-control" placeholder="Confirmar Contraseña" autocomplete="off" />
+                    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+
+                <div class=" form-group">
+                    <label></label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Nombre" autocomplete="off" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label></label>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Telefono" autocomplete="off" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="URLFoto" class="control-label"></label>                   
+                    <input type="file" class="form-control mb-3" name="Imagen">
+                    <span asp-validation-for="URLFoto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-2">
+                    <input type="submit" value="Registrar" class="btn-sm btn-outline-primary" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+

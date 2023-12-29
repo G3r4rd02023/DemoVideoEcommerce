@@ -22,6 +22,9 @@ namespace ProyectoEcommerce
             });
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
+            builder.Services.AddScoped<IServicioLista, ServicioLista>();
+            builder.Services.AddScoped<IServicioImagen, ServicioImagen>();
+
             builder.Services.AddIdentity<Usuario, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;

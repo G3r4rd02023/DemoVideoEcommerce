@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Firebase.Auth;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoEcommerce.Enums;
 using ProyectoEcommerce.Models;
+using ProyectoEcommerce.Models.Entidades;
 using ProyectoEcommerce.Services;
 
 namespace ProyectoEcommerce.Controllers
@@ -8,10 +11,17 @@ namespace ProyectoEcommerce.Controllers
     {
 
         private readonly IServicioUsuario _servicioUsuario;
+        private readonly IServicioLista _servicioLista;
+        private readonly IServicioImagen _servicioImagen;
+        private readonly EcommerceContext _context;
 
-        public LoginController(IServicioUsuario servicioUsuario)
+        public LoginController(IServicioUsuario servicioUsuario, IServicioLista servicioLista, 
+            IServicioImagen servicioImagen, EcommerceContext context)
         {
             _servicioUsuario = servicioUsuario;
+            _servicioLista = servicioLista;
+            _servicioImagen = servicioImagen;
+            _context = context;
         }
 
         public IActionResult IniciarSesion()
@@ -49,8 +59,47 @@ namespace ProyectoEcommerce.Controllers
             return View();
         }
 
+        public IActionResult Registro()
+        {
+            UsuarioViewModel model = new()
+            {
+                Id = Guid.Empty.ToString(),
+                TipoUsuario = TipoUsuario.Cliente,
+            };
+            return View(model);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Registro(UsuarioViewModel model, IFormFile Imagen)
+        {
+            if (ModelState.IsValid)
+            {
+                Stream image = Imagen.OpenReadStream();
+                string urlImagen = await _servicioImagen.SubirImagen(image, Imagen.FileName);
 
+                model.URLFoto = urlImagen;
+              
+                Usuario usuario = await _servicioUsuario.CrearUsuario(model);
+                if (usuario == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    return View(model);
+                }
+                LoginViewModel loginViewModel = new()
+                {
+                    Password = model.Password,
+                    RememberMe = false,
+                    Username = model.Username
+                };
+                var result = await _servicioUsuario.IniciarSesion(loginViewModel);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return View(model);
+        }
 
     }
 }

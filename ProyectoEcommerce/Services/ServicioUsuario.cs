@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Firebase.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProyectoEcommerce.Migrations;
 using ProyectoEcommerce.Models;
@@ -35,6 +36,27 @@ namespace ProyectoEcommerce.Services
         public async Task<IdentityResult> CrearUsuario(Usuario usuario, string password)
         {
             return await _userManager.CreateAsync(usuario, password);
+        }
+
+        public async Task<Usuario> CrearUsuario(UsuarioViewModel model)
+        {
+            Usuario usuario = new Usuario
+            {               
+                Email = model.Username,
+                Nombre = model.Nombre,                
+                URLFoto = model.URLFoto,
+                PhoneNumber = model.PhoneNumber,              
+                UserName = model.Username,
+                TipoUsuario = model.TipoUsuario
+            };
+            IdentityResult result = await _userManager.CreateAsync(usuario, model.Password);
+            if (result != IdentityResult.Success)
+            {
+                return null;
+            }
+            Usuario nuevoUsuario = await ObtenerUsuario(model.Username);
+            await AsignarRol(nuevoUsuario, usuario.TipoUsuario.ToString());
+            return nuevoUsuario;
         }
 
         public async Task<SignInResult> IniciarSesion(LoginViewModel model)
