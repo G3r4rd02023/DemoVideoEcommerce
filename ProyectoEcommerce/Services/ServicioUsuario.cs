@@ -23,9 +23,19 @@ namespace ProyectoEcommerce.Services
             _signInManager = signInManager;
         }
 
+        public async Task<IdentityResult> ActualizarUsuario(Usuario usuario)
+        {
+            return await _userManager.UpdateAsync(usuario);
+        }
+
         public async Task AsignarRol(Usuario usuario, string nombreRol)
         {
             await _userManager.AddToRoleAsync(usuario, nombreRol);
+        }
+
+        public async Task<IdentityResult> CambiarPassword(Usuario usuario, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(usuario, oldPassword, newPassword);
         }
 
         public async Task CerrarSesion()
@@ -74,6 +84,12 @@ namespace ProyectoEcommerce.Services
         {
             return await _context.Users           
             .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<Usuario> ObtenerUsuario(Guid userId)
+        {
+            return await _context.Users            
+            .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
         public async Task<bool> UsuarioEnRol(Usuario usuario, string nombreRol)

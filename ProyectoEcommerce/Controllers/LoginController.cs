@@ -101,5 +101,45 @@ namespace ProyectoEcommerce.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> EditarUsuario()
+        {
+            Usuario usuario = await _servicioUsuario.ObtenerUsuario(User.Identity.Name);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            
+            Usuario model = new()
+            {
+                Nombre = usuario.Nombre,
+                PhoneNumber = usuario.PhoneNumber,
+                URLFoto = usuario.URLFoto,             
+                Id = usuario.Id,                
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarUsuario(Usuario model, IFormFile Imagen)
+        {
+            if (ModelState.IsValid)
+            {
+                             
+                Usuario usuario = await _servicioUsuario.ObtenerUsuario(User.Identity.Name);
+                usuario.Nombre = model.Nombre;
+                usuario.PhoneNumber = model.PhoneNumber;
+
+                Stream image = Imagen.OpenReadStream();
+                string urlImagen = await _servicioImagen.SubirImagen(image, Imagen.FileName);
+                usuario.URLFoto = urlImagen;
+
+                await _servicioUsuario.ActualizarUsuario(usuario);
+                return RedirectToAction("Index", "Home");
+
+            }
+            return View(model);
+        }
+
     }
 }

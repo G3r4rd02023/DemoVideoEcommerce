@@ -15,6 +15,10 @@ namespace ProyectoEcommerce.Services
         Task<SignInResult> IniciarSesion(LoginViewModel model);
         Task CerrarSesion();
         Task<Usuario> CrearUsuario(UsuarioViewModel model);
+        Task<IdentityResult> CambiarPassword(Usuario usuario, string oldPassword, string newPassword);
+        Task<IdentityResult> ActualizarUsuario(Usuario usuario);
+        Task<Usuario> ObtenerUsuario(Guid userId);
+
 
     }
 
