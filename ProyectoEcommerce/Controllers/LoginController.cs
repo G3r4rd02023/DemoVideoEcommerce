@@ -141,5 +141,35 @@ namespace ProyectoEcommerce.Controllers
             return View(model);
         }
 
+        public IActionResult CambiarPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CambiarPassword(PasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var usuario = await _servicioUsuario.ObtenerUsuario(User.Identity.Name);
+                if (usuario != null)
+                {
+                    var result = await _servicioUsuario.CambiarPassword(usuario, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("EditarUsuario");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Usuario no encontrado.");
+                }
+            }
+            return View(model);
+        }
     }
 }
