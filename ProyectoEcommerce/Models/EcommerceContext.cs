@@ -11,7 +11,7 @@ namespace ProyectoEcommerce.Models
         }
 
         public DbSet<Categoria> Categorias { get; set; }
-
+        public DbSet<Producto> Productos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

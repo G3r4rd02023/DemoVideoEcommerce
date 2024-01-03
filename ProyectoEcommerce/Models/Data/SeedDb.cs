@@ -21,11 +21,13 @@ namespace ProyectoEcommerce.Models.Data
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-            await VerificarCategoriasAsync();
+            await VerificarCategoriasAsync();           
             await VerificarRolesAsync();
             await VerificarUsuariosAsync("Administrador", "administrador@yopmail.com", "3170 2187", 
             TipoUsuario.Administrador);
         }
+
+        
 
         private async Task<Usuario> VerificarUsuariosAsync(string nombre, string email, string telefono, TipoUsuario tipoUsuario)
         {
