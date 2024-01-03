@@ -1,8 +1,104 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@model ProyectoEcommerce.Models.CatalogoViewModel
+
+    <h2 class=" text-center text-white">Catálogo de Productos</h2>
+
+<style type="text/css">
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid lightgray;
+        box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+        border-radius: 15px;
+        font-family: sans-serif;
+        margin: 5px;
+    }
+</style>
+
+@if (TempData["ALertMessage"] != null)
+{
+    <div class=" alert alert-success">
+        <strong> Ok!!---</strong>@TempData["AlertMessage"]
+    </div>
+}
+<hr />
+<div class="mb-2">
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Ordenar por Nombre</a>&nbsp;&nbsp;    
+</div>
+
+<div class="mb-2">
+    @foreach (var item in Model.Categorias)
+    {
+        <span>@item.Nombre&nbsp;&nbsp;</span>
+    }
+</div>
+
+<a onclick="showInPopup('@Url.Action("VerCarrito", "Home", Context.Request.Scheme)' ,
+                            '')" class="btn btn-outline-success btn-sm">Ver carrito </a>
+
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Buscar por nombre o categoría: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Buscar" class="btn-sm btn-info"/>           
+            <a asp-action="Index" class="btn-sm btn-success">Ver Todos los Productos</a>
+        </p>
+    </div>
+</form>
+
+    <div class="row">
+        @foreach (var producto in Model.Productos)
+        {
+            <div class="col-md-3">
+                <div class="card mb-3 shadow-sm">
+                    <div class=" zoom">
+                    <img class="card-img-top" src="@producto.URLFoto" alt="Imagen del Producto" style="height:150px; max-width:200px;">
+                    </div>              
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                       
+                        <p class="card-text">Precio: L. @producto.Precio</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">                                                             
+                            <a onclick="showInPopup('@Url.Action("Detalles", "Home", new { id =producto.Id }, Context.Request.Scheme)' ,
+                            '')" class="btn btn-outline-info btn-sm">Ver Detalles </a>
+                            <a onclick="showInPopup('@Url.Action("AgregarAlCarrito", "Home", new { id =producto.Id }, Context.Request.Scheme)' ,
+                            '')" class="btn btn-outline-success btn-sm">Agregar al carrito </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+<partial name="_MostrarModal" />
+
+@{
+    var prevDisabled = !Model.Productos.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Productos.HasNextPage ? "disabled" : "";
+}
+<div class="mt-5">
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Productos.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-info @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Productos.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-success @nextDisabled">
+        Siguiente
+    </a>
+</div>
+
+
+@section Scripts{
+    <script src="~/js/showmodal.js"></script>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>

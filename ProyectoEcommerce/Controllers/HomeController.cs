@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProyectoEcommerce.Models;
+using ProyectoEcommerce.Models.Entidades;
+using ProyectoEcommerce.Services;
 using System.Diagnostics;
 
 namespace ProyectoEcommerce.Controllers
@@ -7,15 +10,61 @@ namespace ProyectoEcommerce.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly EcommerceContext _context;
+        private readonly IServicioUsuario _servicioUsuario;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, EcommerceContext context, IServicioUsuario servicioUsuario)
         {
             _logger = logger;
+            _context = context;
+            _servicioUsuario = servicioUsuario;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            return View();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            IQueryable<Producto> query = _context.Productos
+                .Include(p => p.Categoria)
+                .Where(p => p.Inventario > 0);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query
+                    .Where(p => (p.Nombre.ToLower().Contains(searchString.ToLower()) ||
+                                p.Categoria.Nombre.ToLower().Contains(searchString.ToLower())));
+            }
+
+            switch (sortOrder)
+            {
+                case "NameDesc":
+                    query = query.OrderByDescending(p => p.Nombre);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Nombre);
+                    break;
+            }
+
+            int pageSize = 8;
+
+            CatalogoViewModel model = new()
+            {
+                Productos = await PaginatedList<Producto>.CreateAsync(query, pageNumber ?? 1, pageSize),
+                Categorias = await _context.Categorias.ToListAsync(),
+            };
+
+            return View(model);
         }
 
         [Route("error/404")]
