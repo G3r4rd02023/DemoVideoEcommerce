@@ -5,6 +5,7 @@ using ProyectoEcommerce.Models;
 using ProyectoEcommerce.Models.Data;
 using ProyectoEcommerce.Models.Entidades;
 using ProyectoEcommerce.Services;
+using Vereyon.Web;
 
 namespace ProyectoEcommerce
 {
@@ -24,6 +25,8 @@ namespace ProyectoEcommerce
             builder.Services.AddScoped<IServicioUsuario, ServicioUsuario>();
             builder.Services.AddScoped<IServicioLista, ServicioLista>();
             builder.Services.AddScoped<IServicioImagen, ServicioImagen>();
+            builder.Services.AddScoped<IServicioVenta, ServicioVenta>();
+            builder.Services.AddFlashMessage();
 
             builder.Services.AddIdentity<Usuario, IdentityRole>(cfg =>
             {

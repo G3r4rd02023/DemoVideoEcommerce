@@ -1,8 +1,6 @@
-﻿using Firebase.Auth;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProyectoEcommerce.Migrations;
 using ProyectoEcommerce.Models;
 using ProyectoEcommerce.Models.Entidades;
 using ProyectoEcommerce.Services;
@@ -15,12 +13,15 @@ namespace ProyectoEcommerce.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly EcommerceContext _context;
         private readonly IServicioUsuario _servicioUsuario;
+        private readonly IServicioVenta _servicioVenta;
 
-        public HomeController(ILogger<HomeController> logger, EcommerceContext context, IServicioUsuario servicioUsuario)
+        public HomeController(ILogger<HomeController> logger, EcommerceContext context,
+            IServicioUsuario servicioUsuario, IServicioVenta servicioVenta)
         {
             _logger = logger;
             _context = context;
             _servicioUsuario = servicioUsuario;
+            _servicioVenta = servicioVenta;
         }
 
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
@@ -64,7 +65,7 @@ namespace ProyectoEcommerce.Controllers
             CatalogoViewModel model = new()
             {
                 Productos = await PaginatedList<Producto>.CreateAsync(query, pageNumber ?? 1, pageSize),
-                Categorias = await _context.Categorias.ToListAsync(),              
+                Categorias = await _context.Categorias.ToListAsync(),
 
             };
 
@@ -215,6 +216,39 @@ namespace ProyectoEcommerce.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(VerCarrito));
         }
+
+        [Authorize]
+        public IActionResult ConfirmarVenta()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerCarrito(CarritoViewModel model)
+        {
+            Usuario usuario = await _servicioUsuario.ObtenerUsuario(User.Identity.Name);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            model.Usuario = usuario;
+            model.VentasTemporales = await _context.VentasTemporales
+                .Include(ts => ts.Producto)
+                .Where(ts => ts.Usuario.Id == usuario.Id)
+                .ToListAsync();
+
+            Response response = await _servicioVenta.ProcesarVenta(model);
+            if (response.IsSuccess)
+            {
+                return RedirectToAction(nameof(ConfirmarVenta));
+            }
+
+            ModelState.AddModelError(string.Empty, response.Message);
+            return View(model);
+        }
+
 
         [Route("error/404")]
         public IActionResult Error404()
