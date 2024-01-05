@@ -12,7 +12,10 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Pedidos</h3>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="card-title text-center">Pedidos de @ViewBag.UsuarioActual.Nombre (@User.Identity.Name)</h4>
+                    <img src="@ViewBag.UsuarioActual.URLFoto" alt="Foto de perfil" class="rounded-circle" style="width: 50px; height: 50px;">
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
@@ -20,10 +23,7 @@
                         <tr>
                             <th>
                                 @Html.DisplayNameFor(model => model.Fecha)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Usuario.Nombre)
-                            </th>
+                            </th>                           
                             <th>
                                 @Html.DisplayNameFor(model => model.EstadoPedido)
                             </th>
@@ -43,9 +43,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Fecha)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Usuario.Nombre)
-                                </td>
+                               
                                 <td>
                                     @Html.DisplayFor(modelItem => item.EstadoPedido)
                                 </td>

@@ -9,7 +9,7 @@ using Vereyon.Web;
 
 namespace ProyectoEcommerce.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    
     public class VentasController : Controller
     {
         private readonly EcommerceContext _context;
@@ -23,6 +23,7 @@ namespace ProyectoEcommerce.Controllers
             _flashMessage = flashMessage;
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Ventas
@@ -32,6 +33,7 @@ namespace ProyectoEcommerce.Controllers
                 .ToListAsync());
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Detalles(int? id)
         {
             if (id == null)
@@ -52,16 +54,26 @@ namespace ProyectoEcommerce.Controllers
             return View(venta);
         }
 
+        [Authorize(Roles = "Cliente")]
         public async Task<IActionResult> MisCompras()
         {
-            return View(await _context.Ventas
-                .Include(s => s.Usuario)
-                .Include(s => s.DetallesVenta)
-                .ThenInclude(sd => sd.Producto)
-                .Where(s => s.Usuario.Nombre == User.Identity.Name)
-                .ToListAsync());
+            var ventas = await _context.Ventas
+           .Include(s => s.Usuario)
+           .Include(s => s.DetallesVenta)
+           .ThenInclude(sd => sd.Producto)
+           .Where(s => s.Usuario.Email == User.Identity.Name)
+           .ToListAsync();
+
+            var usuario = await _context.Users 
+                .Where(u => u.Email == User.Identity.Name)
+                .FirstOrDefaultAsync();
+
+            ViewBag.UsuarioActual = usuario;
+
+            return View(ventas);
         }
 
+        [Authorize(Roles = "Cliente")]
         public async Task<IActionResult> MisDetalles(int? id)
         {
             if (id == null)

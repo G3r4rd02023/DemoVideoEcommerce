@@ -5,10 +5,10 @@
 }
 
 <div class="container-fluid">
-    <h3 class="text-muted">Dashboard</h3>
+    <h3 class="text-center"></h3>
 </div>
 
-
+<hr />
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-3 col-md-6">
@@ -63,13 +63,13 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Usuario.Email)
+                                    Cliente
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Producto.Nombre)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Producto.Descripcion)
+                                    @Html.DisplayNameFor(model => model.Producto.URLFoto)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Producto.Precio)
@@ -84,13 +84,15 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Usuario.Email)
+                                        @Html.DisplayFor(modelItem => item.Usuario.Nombre)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Producto.Nombre)
-                                    </td>
+                                    </td>                                   
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Producto.Descripcion)
+                                        <div class="zoom">
+                                            <img src="@item.Producto.URLFoto" style="width:100px;" />
+                                        </div>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Producto.Precio)

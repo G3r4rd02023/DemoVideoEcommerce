@@ -49,9 +49,11 @@
 @if (Model.Cantidad > 0)
 {   
     <a onclick="showInPopup('@Url.Action("VerCarrito", "Home", Context.Request.Scheme)' ,
-                            '')" class="btn btn-outline-success">Ver Carro de Compras(@Model.Cantidad) </a>
+                            '')" class="btn-sm btn-success"><i class=" fas fa-shopping-cart fa-beat"></i> Ver Carro de Compras(@Model.Cantidad) </a>
 
 }
+
+<hr />
 
 <div class=" row">
     @if (Model.Productos.Count() > 0)
@@ -72,8 +74,8 @@
                         </div>
                         <div class="card-footer text-center">
                             <a onclick="showInPopup('@Url.Action("Detalles", "Home", new { id =producto.Id }, Context.Request.Scheme)' ,
-                            '')" class="btn btn-outline-info btn-sm">Detalles </a>                           
-                            <a asp-action="AgregarAlCarrito" asp-route-id="@producto.Id" class="btn btn-sm btn-success">Agregar</a>
+                            '')" class="btn btn-info btn-sm">Ver Detalles </a>                           
+                            <a asp-action="AgregarAlCarrito" asp-route-id="@producto.Id" class="btn btn-sm btn-success">Agregar al carrito</a>
                         </div>
                     </div>
                 </div>
@@ -97,14 +99,14 @@
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.Productos.PageIndex - 1)"
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-info @prevDisabled">
+       class="btn-sm btn-info @prevDisabled">
         Anterior
     </a>
     <a asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@(Model.Productos.PageIndex + 1)"
        asp-route-currentFilter="@ViewData["CurrentFilter"]"
-       class="btn btn-success @nextDisabled">
+       class="btn-sm btn-success @nextDisabled">
         Siguiente
     </a>
 </div>

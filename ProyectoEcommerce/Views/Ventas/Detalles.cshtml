@@ -8,62 +8,62 @@
 <flash dismissable="true" />
 
 
-<h4>Pedido</h4>
+<h4 >Pedido</h4>
 <hr />
-<dl class="row">
+<dl class="row ">
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Fecha)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Fecha)
+        <strong>@Html.DisplayFor(model => model.Fecha)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Usuario.Nombre)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Usuario.Nombre)
+        <strong>@Html.DisplayFor(model => model.Usuario.Nombre)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Usuario.Email)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Usuario.Email)
+        <strong>@Html.DisplayFor(model => model.Usuario.Email)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Comentario)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Comentario)
+        <strong>@Html.DisplayFor(model => model.Comentario)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.EstadoPedido)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.EstadoPedido)
+        <strong>@Html.DisplayFor(model => model.EstadoPedido)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Cantidad)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Cantidad)
+        <strong>@Html.DisplayFor(model => model.Cantidad)</strong>
     </dd>
     <dt class="col-sm-2">
         @Html.DisplayNameFor(model => model.Total)
     </dt>
     <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Total)
+        <strong>@Html.DisplayFor(model => model.Total)</strong>
     </dd>
 </dl>
+<hr />
 
 
-<h2>Detalles</h2>
-
-<div>
-    <a asp-action="Despachar" asp-route-id="@Model?.Id" class="btn btn-outline-primary">Despachar</a>
-    <a asp-action="Enviar" asp-route-id="@Model?.Id" class="btn btn-outline-secondary">Envíar</a>
-    <a asp-action="Confirmar" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Confirmar</a>
-    <a asp-action="Cancelar" asp-route-id="@Model?.Id" class="btn btn-outline-danger">Cancelar</a>
-    <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
+<hr />
+<div class=" text-center">
+    <a asp-action="Despachar" asp-route-id="@Model?.Id" class="btn-sm btn-primary">Despachar</a>
+    <a asp-action="Enviar" asp-route-id="@Model?.Id" class="btn-sm btn-secondary">Envíar</a>
+    <a asp-action="Confirmar" asp-route-id="@Model?.Id" class="btn-sm btn-warning">Confirmar</a>
+    <a asp-action="Cancelar" asp-route-id="@Model?.Id" class="btn-sm btn-danger">Cancelar</a>
+    <a asp-action="Index" class="btn-sm btn-success">Regresar</a>
 </div>
 
 
@@ -74,7 +74,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Productos</h3>
+                <h5 class="card-title text-center">Productos</h5>
             </div>
             <div class="card-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
@@ -83,9 +83,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Producto.Nombre)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Comentario)
-                            </th>
+                           
                             <th>
                                 @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Producto.Precio)
                             </th>
@@ -107,9 +105,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Producto.Nombre)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Comentario)
-                                </td>
+                               
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Producto.Precio)
                                 </td>
