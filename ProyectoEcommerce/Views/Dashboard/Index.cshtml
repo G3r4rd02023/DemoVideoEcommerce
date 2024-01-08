@@ -4,6 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <div class="container-fluid">
     <h3 class="text-center"></h3>
 </div>
@@ -50,86 +53,147 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="card">
-        <h5 class="card-header">
-            <i class="fa-solid fa-tags text-danger"></i> Productos Agregados al Carro de Compras
-        </h5>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
 
-                    <table class="table table-hover table-responsive table-striped smfnt" id="TempTable" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>
-                                    Cliente
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Producto.Nombre)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Producto.URLFoto)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Producto.Precio)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Cantidad)
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Usuario.Nombre)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Producto.Nombre)
-                                    </td>                                   
-                                    <td>
-                                        <div class="zoom">
-                                            <img src="@item.Producto.URLFoto" style="width:100px;" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Producto.Precio)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Cantidad)
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
 
-                </div>
+
+<div class="row mt-2">
+
+    <div class="col-sm-6">
+
+        <div class="card">
+            <div class="card-header">Ventas ultimos 5 días </div>
+            <div class="card-body">
+                <canvas id="chartVentas" style="max-height:250px"></canvas>
+
             </div>
         </div>
+
     </div>
+
+    <div class="col-sm-6">
+
+        <div class="card">
+            <div class="card-header">Productos mayor vendidos </div>
+            <div class="card-body">
+                <canvas id="chartProductos" style="max-height:250px"></canvas>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
 
 @section Scripts {
 
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+   
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#TempTable').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-                },
-                "aLengthMenu": [
-                    [25, 50, 100, 200, -1],
-                    [25, 50, 100, 200, "Todos"]
-                ]
-            });
-        });
+    <script>
+        function resumenVenta() {
+
+            fetch("Dashboard/ResumenVenta")
+                .then((response) => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then((dataJson) => {
+
+
+                    const labels = dataJson.map((item) => { return item.fecha })
+                    const values = dataJson.map((item) => { return item.cantidad })
+
+
+                    const data = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'cantidad',
+                            data: values,
+                            backgroundColor: 'rgb(54, 162, 235)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    const config = {
+                        type: 'bar',
+                        data: data,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        },
+                    };
+
+
+                    const canvasBarras = document.getElementById("chartVentas");
+
+                    const graficoBarras = new Chart(canvasBarras, config)
+
+                }).catch((error) => {
+                    console.log("Error:", error);
+                })
+
+
+        }
+
+
+        function resumenProducto() {
+
+            fetch("Dashboard/ResumenProducto")
+                .then((response) => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then((dataJson) => {
+
+
+
+                    const labels = dataJson.map((item) => { return item.producto })
+                    const values = dataJson.map((item) => { return item.cantidad })
+
+                    const data = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: values,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)',
+                                "#01AF40"
+                            ],
+                            hoverOffset: 4
+                        }]
+                    };
+
+
+                    const config = {
+                        type: 'doughnut',
+                        data: data,
+                    };
+
+
+                    const canvasDona = document.getElementById("chartProductos");
+
+                    const graficoDona = new Chart(canvasDona, config)
+
+                }).catch((error) => {
+                    console.log("error")
+
+                })
+
+
+        }
+
+        $(document).ready(() => {
+
+            resumenVenta()
+            resumenProducto()
+        })
+
     </script>
+
+    
+
 }
 
 

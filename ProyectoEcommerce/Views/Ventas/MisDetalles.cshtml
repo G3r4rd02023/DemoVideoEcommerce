@@ -53,7 +53,7 @@
 </dl>
 
 
-<h2>Detalles</h2>
+<h4>Detalles</h4>
 
 
 
@@ -64,7 +64,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Productos</h3>
+                <h4 class="card-title text-center" >Productos</h4>
             </div>
             <div class="card-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
@@ -73,9 +73,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Producto.Nombre)
                             </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Comentario)
-                            </th>
+                           
                             <th>
                                 @Html.DisplayNameFor(model => model.DetallesVenta.FirstOrDefault().Producto.Precio)
                             </th>
@@ -97,9 +95,7 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Producto.Nombre)
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Comentario)
-                                </td>
+                                
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Producto.Precio)
                                 </td>

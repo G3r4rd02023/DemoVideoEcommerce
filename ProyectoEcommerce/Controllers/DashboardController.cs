@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoEcommerce.Enums;
 using ProyectoEcommerce.Models;
+using ProyectoEcommerce.Models.Entidades;
 using ProyectoEcommerce.Services;
 
 namespace ProyectoEcommerce.Controllers
@@ -30,6 +31,43 @@ namespace ProyectoEcommerce.Controllers
                     .Include(v => v.Producto).ToListAsync());
         }
 
+        public IActionResult ResumenVenta()
+        {
+
+            DateTime FechaInicio = DateTime.Now;
+            FechaInicio = FechaInicio.AddDays(-5);
+
+            List<VentasViewModel> Lista = (from tbventa in _context.Ventas
+                                   where tbventa.Fecha.Date >= FechaInicio.Date
+                                   group tbventa by tbventa.Fecha.Date into grupo
+                                   select new VentasViewModel
+                                   {
+                                       fecha = grupo.Key.ToString("dd/MM/yyyy"),
+                                       cantidad = grupo.Count(),
+                                   }).ToList();
+
+
+
+            return StatusCode(StatusCodes.Status200OK, Lista);
+        }
+
+        public IActionResult ResumenProducto()
+        {
+
+
+            List<ProductosViewModel> Lista = (from tbdetalleventa in _context.DetalleVentas
+                                      group tbdetalleventa by tbdetalleventa.Producto.Nombre into grupo
+                                      orderby grupo.Count() descending
+                                      select new ProductosViewModel
+                                      {
+                                          producto = grupo.Key,
+                                          cantidad = grupo.Count(),
+                                      }).Take(4).ToList();
+
+
+
+            return StatusCode(StatusCodes.Status200OK, Lista);
+        }
 
     }
 }

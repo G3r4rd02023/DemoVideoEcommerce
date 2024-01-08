@@ -85,6 +85,7 @@ namespace ProyectoEcommerce.Controllers
                 .Include(s => s.Usuario)
                 .Include(s => s.DetallesVenta)
                 .ThenInclude(sd => sd.Producto)
+                .Where(s => s.Usuario.Email == User.Identity.Name)
                 .FirstOrDefaultAsync(s => s.Id == id);
             if (venta == null)
             {
